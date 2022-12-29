@@ -65,7 +65,7 @@ public:
     /* For debugging lexer output. */
     [[maybe_unused]] [[nodiscard]] std::string toString() const {
         std::string s {"[\n"};
-        for (const token &t: tokens) {
+        for (const token &t: formatTokens) {
             s += '\t' + t.toString() + '\n';
         }
         s += ']';
@@ -73,7 +73,7 @@ public:
     }
 
     [[nodiscard]] std::vector<token> &getTokens() {
-        return tokens;
+        return formatTokens;
     }
 
     void lex(const std::string &_data) {
@@ -114,13 +114,13 @@ public:
                     break;
 
                 case '-':
-                    if (tokens.empty() || (tokens.back().type == tokenType::add
-                                            ||tokens.back().type == tokenType::sub
-                                            ||tokens.back().type == tokenType::div
-                                            ||tokens.back().type == tokenType::mul
-                                            ||tokens.back().type == tokenType::mod
-                                            ||tokens.back().type == tokenType::exp)
-                        || tokens.back().type == tokenType::lpa) {
+                    if (formatTokens.empty() || (formatTokens.back().type == tokenType::add
+                                                 || formatTokens.back().type == tokenType::sub
+                                                 || formatTokens.back().type == tokenType::div
+                                                 || formatTokens.back().type == tokenType::mul
+                                                 || formatTokens.back().type == tokenType::mod
+                                                 || formatTokens.back().type == tokenType::exp)
+                        || formatTokens.back().type == tokenType::lpa) {
                         t.unary = true;
                         t.precedence = 5;
                         t.rAssociative = false;
@@ -260,13 +260,13 @@ public:
                     exit(1);
             }
 
-            tokens.push_back(t);
+            formatTokens.push_back(t);
         }
     }
 
 private:
     std::string data {};
-    std::vector<token> tokens {};
+    std::vector<token> formatTokens {};
 };
 
 std::deque<token> shuntingYard(std::vector<token> &tokens) {
